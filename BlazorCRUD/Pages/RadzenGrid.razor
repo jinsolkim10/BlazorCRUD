@@ -1,0 +1,35 @@
+﻿@page "/radzengrid"
+@using BlazorCRUD.Data
+@inject EmployeeService objEmpService
+
+<h3>RadzenGrid Database Example</h3>
+
+@if (objEmp == null)
+{
+    <p>로딩중입니다.</p>
+}
+else
+{
+
+    @foreach (var emp in objEmp)
+    {
+    <RadzenGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowPaging="true" PageSize="4"
+            AllowSorting="true" Data="@objEmp" TItem="EmployeeInfo" ColumnWidth="150px">
+        
+        <Columns>
+            <RadzenGridColumn TItem="EmployeeInfo" Property="@emp.Name" Title="EmployeeID"></RadzenGridColumn>
+       
+        </Columns>
+    </RadzenGrid>
+    }
+}
+    
+
+@code {
+    IEnumerable<EmployeeInfo> objEmp;
+
+    protected override async Task OnInitializedAsync()
+    {
+        objEmp = await Task.Run(() => objEmpService.GetEmployee());
+    }
+}

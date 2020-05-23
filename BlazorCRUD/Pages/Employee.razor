@@ -28,9 +28,11 @@ else
                     @foreach (var emp in searchList)//리스트에 있는 아이템들을 emp로 출력
                     {
                     <tr>
-                        <a class="nav-link" href="EditEmployee/@emp.EmployeeId">
-                            <span class="oi oi=pencil" aria-hidden="true"></span>@emp.Name
-                        </a>
+                        <td>
+                            <a class="nav-link" href="EditEmployee/@emp.EmployeeId">
+                                <span class="oi oi=pencil" aria-hidden="true"></span>@emp.Name
+                            </a>
+                        </td>
                     </tr>
                     }
                 </tbody>
