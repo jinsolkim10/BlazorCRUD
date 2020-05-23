@@ -1,0 +1,67 @@
+﻿@page "/AddEmployee"
+@using BlazorCRUD.Data
+@inject EmployeeService objEmpService
+@inject NavigationManager NavigationManager
+
+<h2>추가</h2>
+<hr/>
+
+<form>
+    <EditForm Model="@objEmp" OnValidSubmit="CreateEmployee">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label for="이름" class="control-label"></label>
+                    <input form="이름" class="form-control"placeholder="이름을 입력해주세요" @bind="objEmp.Name" />
+                </div>
+                <div class="form-group">
+                    <label for="이름" class="control-label"></label>
+                    <select @bind="objEmp.Gender" class="form-control">
+                        <option value="">--성별을 선택하세요--</option>
+                        <option value="남성">남성</option>
+                        <option value="여성">여성</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="생년월일" class="control-label"></label>
+                    <InputDate @bind-Value="objEmp.Birthday" min="1920-01-01" max="2150-12-31" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label for="나라" class="control-label"></label>
+                    <input form="나라" class="form-control" placeholder="Input your country" @bind="objEmp.Country" />
+                </div>
+                <div class="form-group">
+                    <label for="지역" class="control-label"></label>
+                    <input form="지역" class="form-control" placeholder="Input your region" @bind="objEmp.City" />
+                </div>
+
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input type="submit" class="btn btn-primary" value="저장" />
+                    <input type="button" class="btn btn-primary" @onclick="@Cancel" value="취소" />
+                </div>
+            </div>
+        </div>
+    </EditForm>
+</form>
+
+@code {
+    EmployeeInfo objEmp = new EmployeeInfo();
+
+    protected void CreateEmployee()
+    {
+        objEmpService.Create(objEmp);
+        NavigationManager.NavigateTo("Employee");
+    }
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("Employee");
+    }
+}

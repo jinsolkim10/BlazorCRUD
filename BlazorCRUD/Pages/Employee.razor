@@ -1,0 +1,107 @@
+﻿@page "/employee"
+@using BlazorCRUD.Data
+@inject EmployeeService objEmpService
+
+<NavLink class="nav-link" href="Addemployee">
+    <span class="oi oi-list-rich" aria-hidden="true"></span> 생성
+</NavLink>
+
+<h1>고객 정보</h1>
+@if (objEmp == null)//EmployeeInfo가 널값일때 메시지 출력
+{
+    <p><em>Loading....</em></p>
+}
+else
+{
+    <div class="container">
+        <div class="row">
+            <input @bind="_searchText" @oninput="SearchKeyDown" />
+        </div>
+        <div class="row">
+            <table>
+                <thead>
+                    <tr>
+                        <th>검색결과</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var emp in searchList)//리스트에 있는 아이템들을 emp로 출력
+                    {
+                    <tr>
+                        <a class="nav-link" href="EditEmployee/@emp.EmployeeId">
+                            <span class="oi oi=pencil" aria-hidden="true"></span>@emp.Name
+                        </a>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>고객 ID</th>
+                <th>이름</th>
+                <th>성별</th>
+                <th>생년월일</th>
+                <th>나라</th>
+                <th>지역</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var emp in objEmp)//리스트에 있는 아이템들을 emp로 출력
+            {
+                <tr>
+                    <td>@emp.EmployeeId</td>
+                    <td>@emp.Name</td>
+                    <td>@emp.Gender</td>
+                    <td>@emp.Birthday</td>
+                    <td>@emp.Country</td>
+                    <td>@emp.City</td>
+                    <td class="text-nowrap">
+                        <a class="nav-link" href="EditEmployee/@emp.EmployeeId">
+                            <span class="oi oi=pencil" aria-hidden="true"></span>편집
+                        </a>
+
+                        <a class="nav-link" href="DeleteEmployee/@emp.EmployeeId">
+                            <span class="oi oi=pencil" aria-hidden="true"></span>삭제
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@code {
+
+    List<EmployeeInfo> objEmp;//리스트로 생성
+    List<EmployeeInfo> searchList = new List<EmployeeInfo>();
+    private string _searchText { get; set; }
+    private string _searchTextNow { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        objEmp = await Task.Run(() => objEmpService.GetEmployee());
+    }
+
+    private void SearchKeyDown(ChangeEventArgs x)
+    {
+        _searchTextNow = (string)x.Value;
+        searchList.Clear();
+        if (string.IsNullOrWhiteSpace(_searchTextNow))
+        {
+            return;
+        }
+        foreach (var item in objEmp)
+        {
+            if (item.Name.Contains(_searchTextNow))
+            {
+                searchList.Add(item);
+            }
+
+        }
+    }
+}
